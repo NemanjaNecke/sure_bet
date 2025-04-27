@@ -1,0 +1,9 @@
+# config.yaml
+PICKLE_FOLDER_PATH: "./pickle_data"
+EXCEL_FOLDER_PATH: "./data"
+FUZZY_THRESHOLD: 80
+TOTAL_STAKE: 100
+OUTPUT_FOLDER: "./results"
+ARCHIVE_FOLDER: "./archive"
+MIN_ODDS: 1.01
+MAX_ODDS: 100.0
