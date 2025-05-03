@@ -1,5 +1,4 @@
 
-# scrape_soccer_only.py  –  wide Excel sheet for football (“S”) only
 import os, time, logging, re
 from datetime import datetime
 import requests
@@ -8,9 +7,9 @@ import pickle
 # ─────────────────────────────────────────────
 # 1)  Logging & constants                     ▼
 # ─────────────────────────────────────────────
-BASE        = "https://www.betole.ba/restapi"
+BASE        = "https://www.soccerbet.ba/restapi"
 DESKTOP_V   = "1.5.1.3"
-SITE_NAME   = "betole"               # used only in file names / logs
+SITE_NAME   = "soccerbet"               # used only in file names / logs
 # ------------------------------------------- ▲
 
 os.makedirs("log", exist_ok=True)

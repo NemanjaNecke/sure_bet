@@ -33,7 +33,7 @@ class InvalidOddsError(Exception):
 def load_config(config_path: str = "config/config.yaml") -> dict:
     default_config = {
         "PICKLE_FOLDER_PATH": "./pickle_data",
-        "EXCEL_FOLDER_PATH": "./excel_data",
+        "EXCEL_FOLDER_PATH": "./data",
         "FUZZY_THRESHOLD": 80,
         "TOTAL_STAKE": 100,
         "OUTPUT_FOLDER": "./results",

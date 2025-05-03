@@ -1,21 +1,10 @@
+from api import betole, sportplus, betlive, maxbet
 import asyncio
 import logging
 import os
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-# Import your scrapers and APIs
-from scrapers import (
-    scraper_wwin,
-    scraper_mdshop,
-    scraper_mbet,
-    scraper_soccer,
-    scraper_premier,
-    scraper_volcano,
-    scraper_xlivebet,
-    scraper_meridian,
-)
-from api import betole, sportplus, betlive, maxbet, mozzart, soccerbet
 from surebet import find_surebet
 
 # Configuration
@@ -24,7 +13,6 @@ LOG_FILE = os.path.join(LOG_DIR, 'main_process.log')
 MAX_CONCURRENT_SCRAPERS = 10  # Adjust based on your system
 RETRIES = 3
 INITIAL_DELAY = 5  # seconds
-
 def setup_main_logging():
     os.makedirs(LOG_DIR, exist_ok=True)
     logging.basicConfig(
@@ -34,6 +22,7 @@ def setup_main_logging():
         format='%(asctime)s - %(levelname)s - %(message)s'
     )
     # Console logging has been removed so logs go only to the file.
+
 
 async def run_with_retries(scraper_func, executor, retries=RETRIES, initial_delay=INITIAL_DELAY):
     """
@@ -61,27 +50,19 @@ async def run_with_retries(scraper_func, executor, retries=RETRIES, initial_dela
                 logging.error(f"{scraper_name} failed after {retries} attempts.")
                 return f"{scraper_name} failed after {retries} attempts."
 
+
 async def main():
     setup_main_logging()
-    
+
     # Map each scraper function to the number of times it should be run.
     # All scrapers run once except scraper_xlivebet, which runs 4 times concurrently.
     scraper_tasks = {
-        maxbet.run: 1, # API
-        mozzart.run: 1, # API
-        scraper_wwin.run: 1,
-        scraper_mdshop.run: 1,
-        scraper_mbet.run: 1,
-        soccerbet.run: 1, # API
-        scraper_premier.run: 1,
-        scraper_volcano.run: 1,
-        sportplus.run: 1,      # API scraper
-        scraper_xlivebet.run: 2,  # Run 2 instances concurrently
-        scraper_meridian.run: 1, # Only selenium scraper
-        betlive.run: 1,        # API scraper
-        betole.run: 1          # API scraper
+        sportplus.run: 1,  # API scraper
+        betlive.run: 1,  # API scraper
+        betole.run: 1,  # API scraper
+        maxbet.run: 1
     }
-    
+
     tasks = []
     with ThreadPoolExecutor(max_workers=MAX_CONCURRENT_SCRAPERS) as executor:
         # For each scraper function, schedule the desired number of runs.
@@ -89,18 +70,19 @@ async def main():
             for _ in range(count):
                 tasks.append(run_with_retries(scraper_func, executor))
         results = await asyncio.gather(*tasks)
-    
+
     for result in results:
         logging.info(result)
-    
+
     # Run surebet calculations after scrapers finish.
     try:
-        # find_surebet.main()
+        find_surebet.main()
         logging.info("Surebet calculations completed successfully.")
     except Exception as e:
         logging.error(f"Error running surebet: {e}")
-    
+
     logging.info("All scrapers have finished running.")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
